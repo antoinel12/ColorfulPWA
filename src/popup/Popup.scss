@@ -1,0 +1,12 @@
+body {
+    background: lightgrey;
+    color: #000000;
+    width: 225px;
+}
+
+@media (prefers-color-scheme: dark) {  
+    body {  
+       background: #333333;    
+       color: white;  
+    }
+}
