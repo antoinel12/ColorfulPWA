@@ -2,7 +2,7 @@
     "manifest_version": 2,
 
     "name": "ColorfulPWA",
-    "description": "This extension allows you to overides web application titlebar color.",
+    "description": "This extension allows you to choose web application titlebar color.",
     "version": "1.0.0",
 
     "author": "antoinel12",
@@ -15,7 +15,6 @@
     },
 
     "permissions": [
-        "tabs",
         "activeTab",
         "storage"
     ],
