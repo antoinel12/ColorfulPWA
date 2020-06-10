@@ -1,3 +1,4 @@
+![ColorfulPWA](README/banner.png)
 # ColorfulPWA
 ColorfulPWA is a Chromium based browser extension that let you choose title bar color.
 
@@ -14,6 +15,7 @@ No data is sent to a webserver, all informations are stored locally on your devi
 
 ## Install
 
+[![Download for Brave](https://img.shields.io/badge/Download-Brave-orange)](https://chrome.google.com/webstore/detail/kecpjkejogdfaibpnfeomdiodibnojll/)
 [![Download for Chrome](https://img.shields.io/badge/Download-Chrome-green)](https://chrome.google.com/webstore/detail/kecpjkejogdfaibpnfeomdiodibnojll/)
 
 ## Build
