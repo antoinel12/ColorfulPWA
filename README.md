@@ -17,6 +17,7 @@ No data is sent to a webserver, all informations are stored locally on your devi
 
 [![Download for Brave](https://img.shields.io/badge/Download-Brave-orange)](https://chrome.google.com/webstore/detail/kecpjkejogdfaibpnfeomdiodibnojll/)
 [![Download for Chrome](https://img.shields.io/badge/Download-Chrome-green)](https://chrome.google.com/webstore/detail/kecpjkejogdfaibpnfeomdiodibnojll/)
+[![Download for Edge](https://img.shields.io/badge/Download-Edge-blue)](https://microsoftedge.microsoft.com/addons/detail/colorfulpwa/pjnppcoednjegfdjpnffdjbehidcfjml)
 
 ## Build
 Restore packages 
