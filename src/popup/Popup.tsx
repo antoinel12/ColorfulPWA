@@ -57,8 +57,8 @@ export default function Popup() {
 
   useEffect(() => {
     chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
-      chrome.tabs.sendMessage(tabs[0].id, { getUrl: true }, (url) => {
-        if(typeof url == "undefined" && chrome.runtime.lastError) {
+      chrome.tabs.sendMessage(tabs[0].id, { getUrl: true }, null, (url) => {
+        if(typeof url == "undefined" && (chrome.runtime as any).lastError) {
           setState({
             disabled: true,
             enabled: defaultEnabled,
