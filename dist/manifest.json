@@ -1,9 +1,9 @@
 {
-    "manifest_version": 2,
+    "manifest_version": 3,
 
     "name": "ColorfulPWA",
     "description": "This extension allows you to choose web application titlebar color.",
-    "version": "1.0.0",
+    "version": "1.0.1",
 
     "author": "antoinel12",
     "homepage_url": "https://github.com/antoinel12/ColorfulPWA",
@@ -16,18 +16,22 @@
 
     "permissions": [
         "activeTab",
-        "storage"
+        "storage",
+        "offscreen"
     ],
 
     "background": {
-        "scripts": ["js/eventPage.js"],
-        "persistent": false
+        "service_worker": "js/eventPage.js",
+        "type": "module"
     },
 
-    "browser_action": {
-        "default_icon": "icon16.png",
+    "action": {
+        "default_icon": {
+            "16": "icon16.png"
+        },
         "default_popup": "popup.html"
     },
+
     "content_scripts": [{
         "matches": [
             "<all_urls>"

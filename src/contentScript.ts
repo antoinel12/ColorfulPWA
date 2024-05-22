@@ -45,12 +45,17 @@ function backupColor(){
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.getUrl) {
-        sendResponse(url);
+        getUrl(request).then(sendResponse);
     }
     else if(request.colorChanged){
         setColor();
         sendResponse();
     }
+    return true;
 });
+
+async function getUrl(request) {
+    return url;
+}
 
 setColor();
