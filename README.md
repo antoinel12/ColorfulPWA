@@ -19,21 +19,5 @@ No data is sent to a webserver, all informations are stored locally on your devi
 [![Download for Chrome](https://img.shields.io/badge/Download-Chrome-green)](https://chrome.google.com/webstore/detail/kecpjkejogdfaibpnfeomdiodibnojll/)
 [![Download for Edge](https://img.shields.io/badge/Download-Edge-blue)](https://microsoftedge.microsoft.com/addons/detail/colorfulpwa/pjnppcoednjegfdjpnffdjbehidcfjml)
 
-## Build
-Restore packages 
-> `npm i`
-
-Compile for development (once)
-> `npm run dev`
-
-Compile for development (watch)
-> `npm run watch`
-
-Compile for production (once)
-> `npm run build`
-
 ## Licence
 This project is licensed under the AGPL-3.0 License - see the LICENSE.md file for details
-
-## Thanks
-- [martellaj for his TypeScript Chrome extension boilerplate](https://github.com/martellaj/chrome-extension-react-typescript-boilerplate)

@@ -8,7 +8,6 @@ const DEFAULT_URL = '';
 const urlInput = document.getElementById('url-input');
 const enabledCheckbox = document.getElementById('enabled-checkbox');
 const colorInput = document.getElementById('color-input');
-const colorPreview = document.getElementById('color-preview');
 const versionSpan = document.getElementById('version');
 
 // Set version number
@@ -24,9 +23,6 @@ let state = {
 
 // Update color preview when color changes
 colorInput.addEventListener('change', handleColorChange);
-colorInput.addEventListener('input', (e) => {
-    colorPreview.style.backgroundColor = e.target.value;
-});
 
 // Handle enabled checkbox
 enabledCheckbox.addEventListener('change', handleEnabledChange);
@@ -91,7 +87,6 @@ function updateUI() {
     enabledCheckbox.disabled = state.disabled;
     colorInput.value = state.color;
     colorInput.disabled = state.disabled;
-    colorPreview.style.backgroundColor = state.color;
 }
 
 function handleColorChange(event) {
