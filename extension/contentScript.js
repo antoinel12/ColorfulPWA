@@ -62,23 +62,19 @@ function handleWindowBlur() {
 }
 
 function setColor() {
-    chrome.storage.sync.get(
-        { [url]: { enabled: false, activeColor: null, inactiveColor: null, color: null } },
-        (data) => {
-            if (data[url] !== undefined) {
-                const baseActive = data[url].activeColor ?? data[url].color;
-                if (data[url].enabled && baseActive !== null) {
-                    activeColor = baseActive;
-                    inactiveColor = data[url].inactiveColor || baseActive;
-                    applyWindowColor();
-                } else {
-                    activeColor = null;
-                    inactiveColor = null;
-                    unsetMeta();
-                }
-            }
+    chrome.storage.sync.get([url], (data) => {
+        const urlData = data[url] || {};
+        const baseActive = urlData.activeColor ?? urlData.color;
+        if (urlData.enabled && baseActive != null) {
+            activeColor = baseActive;
+            inactiveColor = urlData.inactiveColor || baseActive;
+            applyWindowColor();
+        } else {
+            activeColor = null;
+            inactiveColor = null;
+            unsetMeta();
         }
-    );
+    });
 }
 
 function backupColor() {

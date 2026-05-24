@@ -54,28 +54,16 @@ function init() {
 
                 const url = response;
                 
-                chrome.storage.sync.get(
-                    { [url]: { enabled: DEFAULT_ENABLED, activeColor: DEFAULT_COLOR, inactiveColor: DEFAULT_INACTIVE_COLOR, color: DEFAULT_COLOR } },
-                    (data) => {
-                        if (data[url] !== undefined) {
-                            setState({
-                                disabled: DEFAULT_DISABLED,
-                                enabled: data[url].enabled,
-                                activeColor: data[url].activeColor ?? data[url].color,
-                                inactiveColor: data[url].inactiveColor,
-                                url: url
-                            });
-                        } else {
-                            setState({
-                                disabled: DEFAULT_DISABLED,
-                                enabled: DEFAULT_ENABLED,
-                                activeColor: DEFAULT_COLOR,
-                                inactiveColor: DEFAULT_INACTIVE_COLOR,
-                                url: url
-                            });
-                        }
-                    }
-                );
+                chrome.storage.sync.get([url], (data) => {
+                    const urlData = data[url] || {};
+                    setState({
+                        disabled: DEFAULT_DISABLED,
+                        enabled: urlData.enabled ?? DEFAULT_ENABLED,
+                        activeColor: urlData.activeColor ?? urlData.color ?? DEFAULT_COLOR,
+                        inactiveColor: urlData.inactiveColor ?? DEFAULT_INACTIVE_COLOR,
+                        url: url
+                    });
+                });
             }
         );
     });
