@@ -75,26 +75,11 @@ input[type="checkbox"] {
     height: 18px;
 }
 
-.color-picker-wrapper {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-}
-
 input[type="color"] {
-    width: 50px;
-    height: 40px;
+    width: 200px;
+    height: 30px;
     border: 1px solid #ccc;
     border-radius: 4px;
     cursor: pointer;
     padding: 2px;
-}
-
-#color-preview {
-    flex: 1;
-    height: 40px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background: #FFFFFF;
-    transition: background-color 0.2s;
 }
