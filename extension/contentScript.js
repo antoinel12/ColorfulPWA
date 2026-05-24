@@ -1,9 +1,15 @@
 let url = window.location.hostname;
 let backup = null;
-let compatibilityTimer = null;
+let observer = null;
+let desiredColor = null;
+let compatibilityEnabled = false;
+
+function getThemeMeta() {
+    return document.querySelector('meta[name=theme-color]');
+}
 
 function setMeta(color) {
-    let meta = document.querySelector('meta[name=theme-color]');
+    let meta = getThemeMeta();
     if (meta === null) {
         meta = document.createElement('meta');
         meta.setAttribute('name', 'theme-color');
@@ -12,13 +18,40 @@ function setMeta(color) {
     meta.setAttribute('content', color);
 }
 
-function unsetMeta() {
-    if (compatibilityTimer !== null) {
-        clearTimeout(compatibilityTimer);
-        compatibilityTimer = null;
+function disconnectObserver() {
+    if (observer !== null) {
+        observer.disconnect();
+        observer = null;
+    }
+}
+
+function createObserver() {
+    if (observer !== null) {
+        return;
     }
 
-    let meta = document.querySelector('meta[name=theme-color]');
+    observer = new MutationObserver(() => {
+        if (!compatibilityEnabled || desiredColor === null) {
+            return;
+        }
+        const meta = getThemeMeta();
+        if (meta === null || meta.getAttribute('content') !== desiredColor) {
+            setMeta(desiredColor);
+        }
+    });
+
+    observer.observe(document.head, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['content']
+    });
+}
+
+function unsetMeta() {
+    disconnectObserver();
+
+    let meta = getThemeMeta();
     if (backup === null) {
         if (meta !== null) {
             meta.remove();
@@ -28,33 +61,23 @@ function unsetMeta() {
     }
 }
 
-function scheduleSetMeta(color, compatibility) {
-    if (compatibility) {
-        if (compatibilityTimer !== null) {
-            clearTimeout(compatibilityTimer);
-        }
-
-        compatibilityTimer = setTimeout(() => {
-            setMeta(color);
-            compatibilityTimer = null;
-        }, 1000);
-    } else {
-        if (compatibilityTimer !== null) {
-            clearTimeout(compatibilityTimer);
-            compatibilityTimer = null;
-        }
-        setMeta(color);
-    }
-}
-
 function setColor() {
     chrome.storage.sync.get(
         { [url]: { enabled: false, color: null, compatibility: false } },
         (data) => {
             if (data[url] !== undefined) {
                 if (data[url].enabled && data[url].color !== null) {
-                    scheduleSetMeta(data[url].color, data[url].compatibility ?? false);
+                    desiredColor = data[url].color;
+                    compatibilityEnabled = data[url].compatibility ?? false;
+                    setMeta(desiredColor);
+                    if (compatibilityEnabled) {
+                        createObserver();
+                    } else {
+                        disconnectObserver();
+                    }
                 } else {
+                    desiredColor = null;
+                    compatibilityEnabled = false;
                     unsetMeta();
                 }
             }
