@@ -2,12 +2,14 @@
 const DEFAULT_DISABLED = false;
 const DEFAULT_ENABLED = false;
 const DEFAULT_COLOR = '#FFFFFF';
+const DEFAULT_INACTIVE_COLOR = '#D3D3D3';
 const DEFAULT_URL = '';
 
 // UI Elements
 const urlInput = document.getElementById('url-input');
 const enabledCheckbox = document.getElementById('enabled-checkbox');
 const colorInput = document.getElementById('color-input');
+const inactiveColorInput = document.getElementById('inactive-color-input');
 const versionSpan = document.getElementById('version');
 
 // Set version number
@@ -17,18 +19,17 @@ chrome.runtime.getManifest().version && (versionSpan.textContent = `v${chrome.ru
 let state = {
     disabled: DEFAULT_DISABLED,
     enabled: DEFAULT_ENABLED,
-    color: DEFAULT_COLOR,
+    activeColor: DEFAULT_COLOR,
+    inactiveColor: DEFAULT_INACTIVE_COLOR,
     url: DEFAULT_URL
 };
 
 // Update color preview when color changes
-colorInput.addEventListener('change', handleColorChange);
+colorInput.addEventListener('change', handleActiveColorChange);
+inactiveColorInput.addEventListener('change', handleInactiveColorChange);
 
 // Handle enabled checkbox
 enabledCheckbox.addEventListener('change', handleEnabledChange);
-
-// Handle compatibility checkbox
-// (compatibility mode removed)
 
 // Initialize popup
 function init() {
@@ -44,7 +45,8 @@ function init() {
                     setState({
                         disabled: true,
                         enabled: DEFAULT_ENABLED,
-                        color: DEFAULT_COLOR,
+                        activeColor: DEFAULT_COLOR,
+                        inactiveColor: DEFAULT_INACTIVE_COLOR,
                         url: DEFAULT_URL
                     });
                     return;
@@ -53,20 +55,22 @@ function init() {
                 const url = response;
                 
                 chrome.storage.sync.get(
-                    { [url]: { enabled: DEFAULT_ENABLED, color: DEFAULT_COLOR } },
+                    { [url]: { enabled: DEFAULT_ENABLED, activeColor: DEFAULT_COLOR, inactiveColor: DEFAULT_INACTIVE_COLOR, color: DEFAULT_COLOR } },
                     (data) => {
                         if (data[url] !== undefined) {
                             setState({
                                 disabled: DEFAULT_DISABLED,
                                 enabled: data[url].enabled,
-                                color: data[url].color,
+                                activeColor: data[url].activeColor ?? data[url].color,
+                                inactiveColor: data[url].inactiveColor,
                                 url: url
                             });
                         } else {
                             setState({
                                 disabled: DEFAULT_DISABLED,
                                 enabled: DEFAULT_ENABLED,
-                                color: DEFAULT_COLOR,
+                                activeColor: DEFAULT_COLOR,
+                                inactiveColor: DEFAULT_INACTIVE_COLOR,
                                 url: url
                             });
                         }
@@ -88,15 +92,26 @@ function updateUI() {
     urlInput.disabled = state.disabled;
     enabledCheckbox.checked = state.enabled;
     enabledCheckbox.disabled = state.disabled;
-    colorInput.value = state.color;
+    colorInput.value = state.activeColor;
     colorInput.disabled = state.disabled;
+    inactiveColorInput.value = state.inactiveColor;
+    inactiveColorInput.disabled = state.disabled;
 }
 
-function handleColorChange(event) {
+function handleActiveColorChange(event) {
     const newColor = event.target.value;
     setState({
         ...state,
-        color: newColor
+        activeColor: newColor
+    });
+    saveState();
+}
+
+function handleInactiveColorChange(event) {
+    const newColor = event.target.value;
+    setState({
+        ...state,
+        inactiveColor: newColor
     });
     saveState();
 }
@@ -115,7 +130,9 @@ function saveState() {
             {
                 [state.url]: {
                     enabled: state.enabled,
-                    color: state.color
+                    activeColor: state.activeColor,
+                    inactiveColor: state.inactiveColor,
+                    color: state.activeColor
                 }
             },
             () => {

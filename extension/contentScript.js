@@ -1,5 +1,7 @@
 let url = window.location.hostname;
 let backup = null;
+let activeColor = null;
+let inactiveColor = null;
 
 function getThemeMetas() {
     return Array.from(document.querySelectorAll('meta[name=theme-color]'));
@@ -26,7 +28,6 @@ function setMeta(color) {
     ensureMetaColor(color);
 }
 
-
 function unsetMeta() {
     const metas = getThemeMetas();
     if (backup === null) {
@@ -36,14 +37,43 @@ function unsetMeta() {
     }
 }
 
+function applyWindowColor() {
+    if (!activeColor) {
+        return;
+    }
+
+    if (document.hasFocus()) {
+        setMeta(activeColor);
+    } else {
+        setMeta(inactiveColor || activeColor);
+    }
+}
+
+function handleWindowFocus() {
+    if (activeColor) {
+        setMeta(activeColor);
+    }
+}
+
+function handleWindowBlur() {
+    if (activeColor) {
+        setMeta(inactiveColor || activeColor);
+    }
+}
+
 function setColor() {
     chrome.storage.sync.get(
-        { [url]: { enabled: false, color: null } },
+        { [url]: { enabled: false, activeColor: null, inactiveColor: null, color: null } },
         (data) => {
             if (data[url] !== undefined) {
-                if (data[url].enabled && data[url].color !== null) {
-                    setMeta(data[url].color);
+                const baseActive = data[url].activeColor ?? data[url].color;
+                if (data[url].enabled && baseActive !== null) {
+                    activeColor = baseActive;
+                    inactiveColor = data[url].inactiveColor || baseActive;
+                    applyWindowColor();
                 } else {
+                    activeColor = null;
+                    inactiveColor = null;
                     unsetMeta();
                 }
             }
@@ -68,6 +98,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     return true;
 });
 
+window.addEventListener('focus', handleWindowFocus);
+window.addEventListener('blur', handleWindowBlur);
 window.addEventListener('load', () => {
     backupColor();
     setColor();
