@@ -79,5 +79,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     return true;
 });
 
-backupColor();
-setColor();
+window.addEventListener('load', () => {
+    backupColor();
+    setColor();
+});
