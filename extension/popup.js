@@ -60,7 +60,7 @@ function init() {
                         disabled: DEFAULT_DISABLED,
                         enabled: urlData.enabled ?? DEFAULT_ENABLED,
                         activeColor: urlData.activeColor ?? urlData.color ?? DEFAULT_COLOR,
-                        inactiveColor: urlData.inactiveColor ?? DEFAULT_INACTIVE_COLOR,
+                        inactiveColor: urlData.inactiveColor ?? urlData.color ?? DEFAULT_INACTIVE_COLOR,
                         url: url
                     });
                 });

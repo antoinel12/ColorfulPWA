@@ -67,7 +67,7 @@ function setColor() {
         const baseActive = urlData.activeColor ?? urlData.color;
         if (urlData.enabled && baseActive != null) {
             activeColor = baseActive;
-            inactiveColor = urlData.inactiveColor || baseActive;
+            inactiveColor = urlData.inactiveColor ?? urlData.color ?? baseActive;
             applyWindowColor();
         } else {
             activeColor = null;
