@@ -18,6 +18,10 @@ body {
         color: white;
     }
 
+    a {
+        color: #1e90ff;
+    }
+
     input[type="text"],
     input[type="color"] {
         background: #444444;
