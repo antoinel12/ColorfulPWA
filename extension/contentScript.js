@@ -1,5 +1,6 @@
 let url = window.location.hostname;
 let backup = null;
+let compatibilityTimer = null;
 
 function setMeta(color) {
     let meta = document.querySelector('meta[name=theme-color]');
@@ -12,23 +13,47 @@ function setMeta(color) {
 }
 
 function unsetMeta() {
+    if (compatibilityTimer !== null) {
+        clearTimeout(compatibilityTimer);
+        compatibilityTimer = null;
+    }
+
     let meta = document.querySelector('meta[name=theme-color]');
     if (backup === null) {
         if (meta !== null) {
             meta.remove();
         }
-    } else {
+    } else if (meta !== null) {
         meta.setAttribute('content', backup);
+    }
+}
+
+function scheduleSetMeta(color, compatibility) {
+    if (compatibility) {
+        if (compatibilityTimer !== null) {
+            clearTimeout(compatibilityTimer);
+        }
+
+        compatibilityTimer = setTimeout(() => {
+            setMeta(color);
+            compatibilityTimer = null;
+        }, 1000);
+    } else {
+        if (compatibilityTimer !== null) {
+            clearTimeout(compatibilityTimer);
+            compatibilityTimer = null;
+        }
+        setMeta(color);
     }
 }
 
 function setColor() {
     chrome.storage.sync.get(
-        { [url]: { enabled: false, color: null } },
+        { [url]: { enabled: false, color: null, compatibility: false } },
         (data) => {
             if (data[url] !== undefined) {
                 if (data[url].enabled && data[url].color !== null) {
-                    setMeta(data[url].color);
+                    scheduleSetMeta(data[url].color, data[url].compatibility ?? false);
                 } else {
                     unsetMeta();
                 }

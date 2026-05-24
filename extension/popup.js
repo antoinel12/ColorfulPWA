@@ -2,12 +2,14 @@
 const DEFAULT_DISABLED = false;
 const DEFAULT_ENABLED = false;
 const DEFAULT_COLOR = '#FFFFFF';
+const DEFAULT_COMPATIBILITY = false;
 const DEFAULT_URL = '';
 
 // UI Elements
 const urlInput = document.getElementById('url-input');
 const enabledCheckbox = document.getElementById('enabled-checkbox');
 const colorInput = document.getElementById('color-input');
+const compatibilityCheckbox = document.getElementById('compatibility-checkbox');
 const versionSpan = document.getElementById('version');
 
 // Set version number
@@ -18,6 +20,7 @@ let state = {
     disabled: DEFAULT_DISABLED,
     enabled: DEFAULT_ENABLED,
     color: DEFAULT_COLOR,
+    compatibility: DEFAULT_COMPATIBILITY,
     url: DEFAULT_URL
 };
 
@@ -26,6 +29,9 @@ colorInput.addEventListener('change', handleColorChange);
 
 // Handle enabled checkbox
 enabledCheckbox.addEventListener('change', handleEnabledChange);
+
+// Handle compatibility checkbox
+compatibilityCheckbox.addEventListener('change', handleCompatibilityChange);
 
 // Initialize popup
 function init() {
@@ -50,13 +56,14 @@ function init() {
                 const url = response;
                 
                 chrome.storage.sync.get(
-                    { [url]: { enabled: DEFAULT_ENABLED, color: DEFAULT_COLOR } },
+                    { [url]: { enabled: DEFAULT_ENABLED, color: DEFAULT_COLOR, compatibility: DEFAULT_COMPATIBILITY } },
                     (data) => {
                         if (data[url] !== undefined) {
                             setState({
                                 disabled: DEFAULT_DISABLED,
                                 enabled: data[url].enabled,
                                 color: data[url].color,
+                                compatibility: data[url].compatibility ?? DEFAULT_COMPATIBILITY,
                                 url: url
                             });
                         } else {
@@ -64,6 +71,7 @@ function init() {
                                 disabled: DEFAULT_DISABLED,
                                 enabled: DEFAULT_ENABLED,
                                 color: DEFAULT_COLOR,
+                                compatibility: DEFAULT_COMPATIBILITY,
                                 url: url
                             });
                         }
@@ -87,6 +95,8 @@ function updateUI() {
     enabledCheckbox.disabled = state.disabled;
     colorInput.value = state.color;
     colorInput.disabled = state.disabled;
+    compatibilityCheckbox.checked = state.compatibility;
+    compatibilityCheckbox.disabled = state.disabled;
 }
 
 function handleColorChange(event) {
@@ -106,13 +116,22 @@ function handleEnabledChange(event) {
     saveState();
 }
 
+function handleCompatibilityChange(event) {
+    setState({
+        ...state,
+        compatibility: event.target.checked
+    });
+    saveState();
+}
+
 function saveState() {
     if (state.url !== '') {
         chrome.storage.sync.set(
             {
                 [state.url]: {
                     enabled: state.enabled,
-                    color: state.color
+                    color: state.color,
+                    compatibility: state.compatibility
                 }
             },
             () => {
