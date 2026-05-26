@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colorful PWA</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <div class="container">
+        <div class="form-group">
+            <label for="url-input">URL</label>
+            <input type="text" id="url-input" readonly>
+        </div>
+
+        <div class="form-group">
+            <label class="checkbox-label">
+                <input type="checkbox" id="enabled-checkbox">
+                <span>Enabled</span>
+            </label>
+        </div>
+
+        <div class="form-group">
+            <label for="color-input">Active Color</label>
+            <input type="color" id="color-input" value="#FFFFFF">
+        </div>
+
+        <div class="form-group">
+            <label for="inactive-color-input">Inactive Color</label>
+            <input type="color" id="inactive-color-input" value="#D3D3D3">
+        </div>
+    </div>
+    <div><br /><a href="https://github.com/antoinel12/ColorfulPWA" target="_blank">ColorfulPWA</a> <span id="version"></span></div>
+
+    <script src="popup.js"></script>
+</body>
+</html>
